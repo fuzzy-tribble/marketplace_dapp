@@ -12,6 +12,7 @@ import "./ItemStruct.sol";
 contract Items is Ownable {
     Item[] public items;
     address[] public user;
+    event NewItem(string title, string description,uint256 price);
 
     /**
      * @dev creates a new item
@@ -21,19 +22,21 @@ contract Items is Ownable {
         string memory _title,
         string memory _description,
         uint256 _price,
-        uint256[] memory _attached_media,
-        bytes32[] memory _tags
+        uint256[] memory _attached_media
+        // bytes32[] memory _tags
     ) public {
         Item memory newItem = Item({
             owner: msg.sender,
             title: _title,
             description: _description,
             price: _price,
-            attached_media: _attached_media,
-            tags: _tags
+            attached_media: _attached_media
+            // tags: _tags
         });
 
         items.push(newItem);
+        
+        emit NewItem(_title,_description,_price);
     }
 
     /**

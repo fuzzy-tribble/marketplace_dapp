@@ -2,6 +2,9 @@ const Items = artifacts.require("Items");
 const { sampleItem, noItems } = require("./TestData.js");
 
 contract("Items", (accounts) => {
+    // It extends Mocha's describe() by providing a list of accounts for testing and doing some cleanup as well.
+
+    let [alice, bob] = accounts;
     let itemsContract;
 
     // Get the contract
@@ -10,23 +13,32 @@ contract("Items", (accounts) => {
     });
 
     // Check getItems() iff no items, iff > 0 items
-    it("can fetch the list of items", async () => {
+    it("can fetch the list of items and verifiy its emtpy", async () => {
         const items = await itemsContract.getItems();
+        // assert.equal(items.logs[0].args.items, [],'not empty aray');
+        // assert.equal(items.receipt.status, true,'not true');
         assert.equal(items, [], "The items list should be empty if none have been added");
     });
 
-
-    describe('creating an item', async () => {
-        before("create an item using accounts[0]", async () => {
-            const i = sampleItem;
-            await itemsContract.create(_title = i.title, _description = i.description, _price = i.price, _attached_media = i.attached_media, _tag = i.tag, {
-                from: accounts[0]
-            }); // This acount should come from ganache.
-            expectedUser = accounts[0];
+    it("Should be able to create an item", async () => {
+        const titles = ["bad", "mamba"];
+        // const i = sampleItem;
+        const result = await itemsContract.create(_title = titles[0], _description = 'i.description', _price = 150, _attached_media = [2586], {
+            from: alice
         });
-        // it("can fetch the items of a user by item id", async () => {
-        //     const user = await itemsContract.users(9);
-        //     assert.equal(user, expectedUser, " The owner of the item should be the first account.");
-        // });
+        console.log(result);
+
+        assert.equal(result.receipt.status, true, 'not true');
+        assert.equal(result.logs[0].args.title, "bad");
     });
+
+    // Check getItems() iff no items, iff > 0 items
+    it("can fetch the list of items", async () => {
+        const items = await itemsContract.getItems();
+        // assert.equal(items.logs[0].args.items, [],'not empty aray');
+        // assert.equal(items.receipt.status, true,'not true');
+        assert.equal(items[0]['title'], "bad", "The items list should be empty if none have been added");
+    });
+
+
 });

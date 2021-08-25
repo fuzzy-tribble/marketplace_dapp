@@ -14,5 +14,5 @@ struct Item {
     // TODO: - are IPFS hashes uint256, address or something else
     uint256[] attached_media;
     // uint256 creation_date;
-    bytes32[] tags;
+    // bytes32[] tags;
 }
